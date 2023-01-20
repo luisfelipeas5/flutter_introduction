@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_introduction/dart_samples/dart_samples.dart';
 
 void main() {
+  runDartSamples();
   runApp(const MyApp());
 }
 
