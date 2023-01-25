@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+
 void variablesDeclarations(bool isBrazil) {
   var draftMovieName = "The Fabelmans";
   if (isBrazil) {
@@ -10,12 +12,14 @@ void variablesDeclarations(bool isBrazil) {
   final movieCrew = MovieCrew();
   final actorHighlighted = movieCrew.getHighlightActor();
 
-  print(
-    "Movie: $draftMovieName - "
-    "Director: $director - "
-    "Starring: $actorHighlighted - "
-    "Actors: ${MovieCrew.actors}",
-  );
+  if (kDebugMode) {
+    print(
+      "Movie: $draftMovieName - "
+      "Director: $director - "
+      "Starring: $actorHighlighted - "
+      "Actors: ${MovieCrew.actors}",
+    );
+  }
 }
 
 class MovieCrew {
