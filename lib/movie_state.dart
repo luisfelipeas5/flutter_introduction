@@ -1,7 +1,7 @@
 class MovieState {
-  final bool changed;
+  final String title;
 
   MovieState({
-    required this.changed,
+    required this.title,
   });
 }
