@@ -7,19 +7,20 @@ import 'package:flutter_introduction/movie_state.dart';
 class MoviePage extends StatefulWidget {
   const MoviePage({
     super.key,
+    required this.bloc,
   });
+
+  final MovieBloc bloc;
 
   @override
   State<MoviePage> createState() => _MoviePageState();
 }
 
 class _MoviePageState extends State<MoviePage> {
-  final _movieBloc = MovieBloc();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MovieBloc, MovieState>(
-        bloc: _movieBloc,
+        bloc: widget.bloc,
         builder: (context, state) {
           return Scaffold(
             body: Column(
@@ -35,7 +36,7 @@ class _MoviePageState extends State<MoviePage> {
                 const SizedBox(height: 8),
                 MaterialButton(
                   onPressed: () {
-                    _movieBloc.add(MovieChangeEvent());
+                    widget.bloc.add(MovieChangeEvent());
                   },
                   color: Colors.blue,
                   child: const Text("Trocar!"),
