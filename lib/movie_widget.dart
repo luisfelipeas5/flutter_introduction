@@ -18,31 +18,32 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(
-        bloc: _movieBloc,
-        builder: (context, state) {
-          return Scaffold(
-            body: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    state.changed ? "Creed" : "Rocky Balboa",
-                  ),
+    return Scaffold(
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          BlocBuilder<MovieBloc, MovieState>(
+            bloc: _movieBloc,
+            builder: (context, state) {
+              return Center(
+                child: Text(
+                  state.title,
                 ),
-                const SizedBox(height: 8),
-                MaterialButton(
-                  onPressed: () {
-                    _movieBloc.add(MovieChangeEvent());
-                  },
-                  color: Colors.blue,
-                  child: const Text("Trocar!"),
-                ),
-              ],
-            ),
-          );
-        });
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          MaterialButton(
+            onPressed: () {
+              _movieBloc.add(MovieChangeEvent());
+            },
+            color: Colors.blue,
+            child: const Text("Trocar!"),
+          ),
+        ],
+      ),
+    );
   }
 }

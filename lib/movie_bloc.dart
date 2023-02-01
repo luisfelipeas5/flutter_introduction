@@ -8,7 +8,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc()
       : super(
           MovieState(
-            changed: false,
+            title: _getTitle(changed: false),
           ),
         ) {
     on<MovieChangeEvent>(_onChange);
@@ -23,8 +23,16 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     _changed = !_changed;
     emit(
       MovieState(
-        changed: _changed,
+        title: _title,
       ),
     );
+  }
+
+  String get _title => _getTitle(changed: _changed);
+
+  static String _getTitle({
+    required bool changed,
+  }) {
+    return changed ? "Creed" : "Rocky Balboa";
   }
 }
