@@ -1,11 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/change_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_title.dart';
-import 'package:flutter_introduction/movie_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -13,17 +12,18 @@ void main() {
   late MovieBloc movieBloc;
   late MovieState initialState;
 
-  Future<void> pumpMoviePage(WidgetTester tester) {
+  Future<void> pumpMovieTitle(WidgetTester tester) {
     return tester.pumpWidget(
-      MaterialApp(
-        home: MoviePage(
-          bloc: movieBloc,
+      BlocProvider<MovieBloc>(
+        create: (context) => movieBloc,
+        child: const MaterialApp(
+          home: MovieTitle(),
         ),
       ),
     );
   }
 
-  group("MoviePage", () {
+  group("MovieTitle", () {
     setUp(() {
       movieBloc = _MockMovieBloc();
 
@@ -39,23 +39,15 @@ void main() {
 
     testWidgets(
       "when widget is pumped, "
-      "then expect to find MovieTitle",
+      "then expect to find 'Rocky Balboa' text",
       (widgetTester) async {
-        await pumpMoviePage(widgetTester);
+        const title = "mock title";
+        when(() => initialState.title).thenReturn(title);
 
-        final finder = find.byType(MovieTitle);
-        expect(finder, findsOneWidget);
-      },
-    );
+        await pumpMovieTitle(widgetTester);
 
-    testWidgets(
-      "when widget is pumped, "
-      "then expect to find ChangeButton",
-      (widgetTester) async {
-        await pumpMoviePage(widgetTester);
-
-        final finder = find.byType(ChangeButton);
-        expect(finder, findsOneWidget);
+        final textFinder = find.text(title);
+        expect(textFinder, findsOneWidget);
       },
     );
   });
