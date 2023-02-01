@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
@@ -17,6 +19,8 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
+  ColorSwatch<int> _buttonColor = Colors.blue;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,26 +29,40 @@ class _MoviePageState extends State<MoviePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          BlocBuilder<MovieBloc, MovieState>(
-            bloc: widget.bloc,
-            builder: (context, state) {
-              return Center(
-                child: Text(
-                  state.title,
-                ),
-              );
-            },
-          ),
+          _buildTitle(),
           const SizedBox(height: 8),
-          MaterialButton(
-            onPressed: () {
-              widget.bloc.add(MovieChangeEvent());
-            },
-            color: Colors.blue,
-            child: const Text("Trocar!"),
-          ),
+          _buildChangeButton(),
         ],
       ),
     );
   }
+
+  Widget _buildTitle() {
+    return BlocBuilder<MovieBloc, MovieState>(
+      bloc: widget.bloc,
+      builder: (context, state) {
+        return Center(
+          child: Text(
+            state.title,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildChangeButton() {
+    return MaterialButton(
+      onPressed: () {
+        setState(() {
+          _buttonColor = _genrateRandomColor();
+        });
+        widget.bloc.add(MovieChangeEvent());
+      },
+      color: _buttonColor,
+      child: const Text("Trocar!"),
+    );
+  }
+
+  MaterialAccentColor _genrateRandomColor() =>
+      Colors.accents[Random().nextInt(Colors.accents.length)];
 }
