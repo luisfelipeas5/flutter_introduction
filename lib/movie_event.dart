@@ -1,3 +1,8 @@
-abstract class MovieEvent {}
+import 'package:equatable/equatable.dart';
 
-class MovieChangeEvent extends MovieEvent {}
+abstract class MovieEvent extends Equatable {}
+
+class MovieChangeEvent extends MovieEvent {
+  @override
+  List<Object?> get props => [];
+}
