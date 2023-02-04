@@ -1,7 +1,9 @@
+import 'package:flutter_introduction/movie.dart';
+
 class MovieState {
-  final String title;
+  final List<Movie> movies;
 
   MovieState({
-    required this.title,
+    required this.movies,
   });
 }

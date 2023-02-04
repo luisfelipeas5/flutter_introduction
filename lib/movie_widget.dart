@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_title.dart';
+import 'package:flutter_introduction/movie_list.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({
@@ -22,15 +22,16 @@ class _MoviePageState extends State<MoviePage> {
     return BlocProvider<MovieBloc>(
       create: (context) => widget.bloc,
       child: Scaffold(
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            MovieTitle(),
-            SizedBox(height: 8),
-            ChangeButton(),
-          ],
+        body: SafeArea(
+          child: Column(
+            children: const [
+              Expanded(
+                child: MovieList(),
+              ),
+              SizedBox(height: 8),
+              ChangeButton(),
+            ],
+          ),
         ),
       ),
     );

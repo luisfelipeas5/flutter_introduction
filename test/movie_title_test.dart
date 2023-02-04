@@ -1,23 +1,17 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_title.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc movieBloc;
-  late MovieState initialState;
+  late Movie movie;
 
   Future<void> pumpMovieTitle(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
-        create: (context) => movieBloc,
-        child: const MaterialApp(
-          home: MovieTitle(),
+      MaterialApp(
+        home: MovieTitle(
+          movie: movie,
         ),
       ),
     );
@@ -25,24 +19,15 @@ void main() {
 
   group("MovieTitle", () {
     setUp(() {
-      movieBloc = _MockMovieBloc();
-
-      initialState = _MockMovieState();
-      when(() => initialState.title).thenReturn("Creed");
-
-      whenListen(
-        movieBloc,
-        const Stream<MovieState>.empty(),
-        initialState: initialState,
-      );
+      movie = _MockMovie();
     });
 
     testWidgets(
       "when widget is pumped, "
-      "then expect to find 'Rocky Balboa' text",
+      "then expect to find Text with movie title",
       (widgetTester) async {
         const title = "mock title";
-        when(() => initialState.title).thenReturn(title);
+        when(() => movie.title).thenReturn(title);
 
         await pumpMovieTitle(widgetTester);
 
@@ -53,7 +38,4 @@ void main() {
   });
 }
 
-class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
-
-class _MockMovieState extends Mock implements MovieState {}
+class _MockMovie extends Mock implements Movie {}

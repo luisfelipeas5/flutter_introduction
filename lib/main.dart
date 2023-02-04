@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/dart_samples/dart_samples.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_widget.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runDartSamples();
   runApp(const MyApp());
 }
 

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie.dart';
 
 class MovieTitle extends StatelessWidget {
-  const MovieTitle({super.key});
+  final Movie movie;
+
+  const MovieTitle({
+    super.key,
+    required this.movie,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(
-      builder: (context, state) {
-        return Center(
-          child: Text(
-            state.title,
-          ),
-        );
-      },
+    return Center(
+      child: Text(
+        movie.title,
+      ),
     );
   }
 }
