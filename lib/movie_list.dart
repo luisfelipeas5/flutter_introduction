@@ -20,8 +20,13 @@ class MovieList extends StatelessWidget {
   }
 
   Widget _buildList(List<Movie> movies) {
-    return ListView(
-      children: movies.map(_buildMovie).toList(),
+    return ListView.separated(
+      itemCount: movies.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
+      itemBuilder: (context, index) {
+        final movie = movies[index];
+        return _buildMovie(movie);
+      },
     );
   }
 
