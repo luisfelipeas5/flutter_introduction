@@ -21,6 +21,7 @@ class MovieList extends StatelessWidget {
 
   Widget _buildList(List<Movie> movies) {
     return ListView.separated(
+      shrinkWrap: true,
       itemCount: movies.length,
       separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
