@@ -42,7 +42,7 @@ void main() {
     testWidgets(
       "given a movie list with 3 movies, "
       "when pumped, "
-      "then expect to find ListView with lenth = 3",
+      "then expect to find ListView with lenth = 5 (summing the separators)",
       (widgetTester) async {
         final movies = [
           _MockMovie(),
@@ -56,18 +56,18 @@ void main() {
         final listView = widgetTester.widget<ListView>(
           find.byType(ListView),
         );
-        final delegate = listView.childrenDelegate as SliverChildListDelegate;
-        expect(delegate.children.length, 3);
+        final delegate =
+            listView.childrenDelegate as SliverChildBuilderDelegate;
+        expect(delegate.childCount, 5);
       },
     );
 
     testWidgets(
+      "given a movie list with 2 movies "
       "when pumped, "
       "then expect to find a MovieTitle for each movie in the list",
       (widgetTester) async {
-        final movie0 = _MockMovie();
-        final movie1 = _MockMovie();
-        final movies = [movie0, movie1];
+        final movies = List.generate(2, (index) => _MockMovie());
 
         when(() => initialState.movies).thenReturn(movies);
 
@@ -76,6 +76,31 @@ void main() {
         for (var movie in movies) {
           final movieTitleFinder = find.byWidgetPredicate(
             (widget) => widget is MovieTitle && widget.movie == movie,
+          );
+          expect(movieTitleFinder, findsOneWidget);
+        }
+      },
+    );
+
+    testWidgets(
+      "given a movie list with 100 movies, "
+      "when pumped, "
+      "then expect to find a MovieTitle for each movie in the list",
+      (widgetTester) async {
+        final movies = List.generate(100, (index) => _MockMovie());
+
+        when(() => initialState.movies).thenReturn(movies);
+
+        await pumpMovieList(widgetTester);
+
+        for (var movie in movies) {
+          final movieTitleFinder = find.byWidgetPredicate(
+            (widget) => widget is MovieTitle && widget.movie == movie,
+          );
+          await widgetTester.dragUntilVisible(
+            movieTitleFinder,
+            find.byType(ListView),
+            const Offset(0, 10),
           );
           expect(movieTitleFinder, findsOneWidget);
         }
