@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
 
@@ -8,7 +9,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc()
       : super(
           MovieState(
-            title: _getTitle(changed: false),
+            movies: _getMovies(changed: false),
           ),
         ) {
     on<MovieChangeEvent>(_onChange);
@@ -23,16 +24,32 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     _changed = !_changed;
     emit(
       MovieState(
-        title: _title,
+        movies: _movies,
       ),
     );
   }
 
-  String get _title => _getTitle(changed: _changed);
+  List<Movie> get _movies => _getMovies(changed: _changed);
 
-  static String _getTitle({
+  static List<Movie> _getMovies({
     required bool changed,
   }) {
-    return changed ? "Creed" : "Rocky Balboa";
+    return changed
+        ? const [
+            Movie(
+              title: "Creed",
+            ),
+            Movie(
+              title: "Creed II",
+            ),
+          ]
+        : const [
+            Movie(
+              title: "Rocky Balboa",
+            ),
+            Movie(
+              title: "Rocky Balboa II",
+            ),
+          ];
   }
 }

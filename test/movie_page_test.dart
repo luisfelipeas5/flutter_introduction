@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
+import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
-import 'package:flutter_introduction/movie_title.dart';
 import 'package:flutter_introduction/movie_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -28,7 +28,7 @@ void main() {
       movieBloc = _MockMovieBloc();
 
       initialState = _MockMovieState();
-      when(() => initialState.title).thenReturn("Creed");
+      when(() => initialState.movies).thenReturn([]);
 
       whenListen(
         movieBloc,
@@ -39,11 +39,11 @@ void main() {
 
     testWidgets(
       "when widget is pumped, "
-      "then expect to find MovieTitle",
+      "then expect to find MovieList",
       (widgetTester) async {
         await pumpMoviePage(widgetTester);
 
-        final finder = find.byType(MovieTitle);
+        final finder = find.byType(MovieList);
         expect(finder, findsOneWidget);
       },
     );
