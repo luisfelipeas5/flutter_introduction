@@ -25,9 +25,7 @@ class _MoviePageState extends State<MoviePage> {
         body: SafeArea(
           child: Column(
             children: const [
-              Expanded(
-                child: MovieList(),
-              ),
+              MovieList(),
               SizedBox(height: 8),
               ChangeButton(),
             ],

@@ -34,22 +34,9 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   static List<Movie> _getMovies({
     required bool changed,
   }) {
-    return changed
-        ? const [
-            Movie(
-              title: "Creed",
-            ),
-            Movie(
-              title: "Creed II",
-            ),
-          ]
-        : const [
-            Movie(
-              title: "Rocky Balboa",
-            ),
-            Movie(
-              title: "Rocky Balboa II",
-            ),
-          ];
+    return List.generate(100, (index) {
+      final prefix = changed ? "Creed" : "Rocky Balboa";
+      return Movie(title: "$prefix $index");
+    });
   }
 }
