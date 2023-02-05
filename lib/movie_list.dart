@@ -20,20 +20,23 @@ class MovieList extends StatelessWidget {
   }
 
   Widget _buildList(List<Movie> movies) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: movies.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        final movie = movies[index];
-        return _buildMovie(movie);
-      },
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final movie = movies[index];
+          return _buildMovie(movie);
+        },
+        childCount: movies.length,
+      ),
     );
   }
 
   Widget _buildMovie(Movie movie) {
-    return MovieTitle(
-      movie: movie,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: MovieTitle(
+        movie: movie,
+      ),
     );
   }
 }

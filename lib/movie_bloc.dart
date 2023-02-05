@@ -15,28 +15,45 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<MovieChangeEvent>(_onChange);
   }
 
-  bool _changed = false;
-
   FutureOr<void> _onChange(
     MovieChangeEvent event,
     Emitter<MovieState> emit,
   ) {
-    _changed = !_changed;
+    final newMovies = state.movies.toList();
+    newMovies[event.index] = _getMovieChanged(index: event.index);
+
     emit(
       MovieState(
-        movies: _movies,
+        movies: newMovies,
       ),
     );
   }
 
-  List<Movie> get _movies => _getMovies(changed: _changed);
-
   static List<Movie> _getMovies({
     required bool changed,
   }) {
-    return List.generate(100, (index) {
+    return List.generate(15, (index) {
       final prefix = changed ? "Creed" : "Rocky Balboa";
       return Movie(title: "$prefix $index");
     });
+  }
+
+  Movie _getMovieChanged({
+    required int index,
+  }) {
+    final movie = state.movies[index];
+
+    final newTitlePrefix = _getTitleChanged(movie.title);
+
+    return movie.copyWith(
+      title: "$newTitlePrefix $index",
+    );
+  }
+
+  String _getTitleChanged(String title) {
+    if (title.contains("Creed")) {
+      return "Rocky Balboa";
+    }
+    return "Creed";
   }
 }
