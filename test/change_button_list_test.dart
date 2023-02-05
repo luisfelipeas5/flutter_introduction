@@ -1,12 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/change_button.dart';
+import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
-import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
-import 'package:flutter_introduction/movie_title.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -15,14 +15,14 @@ void main() {
 
   late MovieState initialState;
 
-  Future<void> pumpMovieList(WidgetTester tester) {
+  Future<void> pumpChangeButtonList(WidgetTester tester) {
     return tester.pumpWidget(
       BlocProvider<MovieBloc>(
         create: (context) => movieBloc,
         child: const MaterialApp(
           home: CustomScrollView(
             slivers: [
-              MovieList(),
+              ChangeButtonList(),
             ],
           ),
         ),
@@ -30,7 +30,7 @@ void main() {
     );
   }
 
-  group("MovieList", () {
+  group("ChangeButtonList", () {
     setUp(() {
       initialState = _MockMovieState();
 
@@ -55,7 +55,7 @@ void main() {
         ];
         when(() => initialState.movies).thenReturn(movies);
 
-        await pumpMovieList(widgetTester);
+        await pumpChangeButtonList(widgetTester);
 
         final sliverList = widgetTester.widget<SliverList>(
           find.byType(SliverList),
@@ -68,19 +68,19 @@ void main() {
     testWidgets(
       "given a movie list with 2 movies "
       "when pumped, "
-      "then expect to find a MovieTitle for each movie in the list",
+      "then expect to find a ChangeButton for each movie in the list",
       (widgetTester) async {
         final movies = List.generate(2, (index) => _MockMovie());
 
         when(() => initialState.movies).thenReturn(movies);
 
-        await pumpMovieList(widgetTester);
+        await pumpChangeButtonList(widgetTester);
 
         for (var movie in movies) {
-          final movieTitleFinder = find.byWidgetPredicate(
-            (widget) => widget is MovieTitle && widget.movie == movie,
+          final changeButtonFinder = find.byWidgetPredicate(
+            (widget) => widget is ChangeButton && widget.movie == movie,
           );
-          expect(movieTitleFinder, findsOneWidget);
+          expect(changeButtonFinder, findsOneWidget);
         }
       },
     );
@@ -88,24 +88,24 @@ void main() {
     testWidgets(
       "given a movie list with 100 movies, "
       "when pumped, "
-      "then expect to find a MovieTitle for each movie in the list",
+      "then expect to find a ChangeButton for each movie in the list",
       (widgetTester) async {
         final movies = List.generate(100, (index) => _MockMovie());
 
         when(() => initialState.movies).thenReturn(movies);
 
-        await pumpMovieList(widgetTester);
+        await pumpChangeButtonList(widgetTester);
 
         for (var movie in movies) {
-          final movieTitleFinder = find.byWidgetPredicate(
-            (widget) => widget is MovieTitle && widget.movie == movie,
+          final changeButtonFinder = find.byWidgetPredicate(
+            (widget) => widget is ChangeButton && widget.movie == movie,
           );
           await widgetTester.dragUntilVisible(
-            movieTitleFinder,
+            changeButtonFinder,
             find.byType(CustomScrollView),
             const Offset(0, 10),
           );
-          expect(movieTitleFinder, findsOneWidget);
+          expect(changeButtonFinder, findsOneWidget);
         }
       },
     );

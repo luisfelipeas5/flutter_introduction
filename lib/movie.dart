@@ -11,4 +11,12 @@ class Movie extends Equatable {
   List<Object?> get props => [
         title,
       ];
+
+  Movie copyWith({
+    String? title,
+  }) {
+    return Movie(
+      title: title ?? this.title,
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/change_button.dart';
+import 'package:flutter_introduction/change_button_list.dart';
+import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
@@ -28,7 +29,9 @@ void main() {
       movieBloc = _MockMovieBloc();
 
       initialState = _MockMovieState();
-      when(() => initialState.movies).thenReturn([]);
+      final movie = _MockMovie();
+      when(() => movie.title).thenReturn("mock title");
+      when(() => initialState.movies).thenReturn([movie]);
 
       whenListen(
         movieBloc,
@@ -50,11 +53,11 @@ void main() {
 
     testWidgets(
       "when widget is pumped, "
-      "then expect to find ChangeButton",
+      "then expect to find ChangeButtonList",
       (widgetTester) async {
         await pumpMoviePage(widgetTester);
 
-        final finder = find.byType(ChangeButton);
+        final finder = find.byType(ChangeButtonList);
         expect(finder, findsOneWidget);
       },
     );
@@ -65,3 +68,5 @@ class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
     implements MovieBloc {}
 
 class _MockMovieState extends Mock implements MovieState {}
+
+class _MockMovie extends Mock implements Movie {}

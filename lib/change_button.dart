@@ -2,11 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 
 class ChangeButton extends StatefulWidget {
-  const ChangeButton({super.key});
+  final Movie movie;
+  final int index;
+
+  const ChangeButton({
+    super.key,
+    required this.movie,
+    required this.index,
+  });
 
   @override
   State<ChangeButton> createState() => _ChangeButtonState();
@@ -24,10 +32,14 @@ class _ChangeButtonState extends State<ChangeButton> {
         });
 
         final bloc = BlocProvider.of<MovieBloc>(context);
-        bloc.add(MovieChangeEvent());
+        bloc.add(MovieChangeEvent(
+          index: widget.index,
+        ));
       },
       color: _buttonColor,
-      child: const Text("Trocar!"),
+      child: Text(
+        "Trocar ${widget.movie.title}!",
+      ),
     );
   }
 
