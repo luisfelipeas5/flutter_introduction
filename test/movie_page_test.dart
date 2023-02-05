@@ -42,6 +42,18 @@ void main() {
 
     testWidgets(
       "when widget is pumped, "
+      "then expect to add MovieLoadEvent to MovieBloc",
+      (widgetTester) async {
+        await pumpMoviePage(widgetTester);
+
+        verify(
+          () => movieBloc.add(MovieLoadEvent()),
+        ).called(1);
+      },
+    );
+
+    testWidgets(
+      "when widget is pumped, "
       "then expect to find MovieList",
       (widgetTester) async {
         await pumpMoviePage(widgetTester);

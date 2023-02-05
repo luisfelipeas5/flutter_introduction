@@ -1,18 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/repository.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
-  MovieBloc()
-      : super(
-          MovieState(
-            movies: _getMovies(changed: false),
+  final Repository _repository;
+
+  MovieBloc(
+    this._repository,
+  ) : super(
+          const MovieState(
+            step: MovieStateStep.loading,
+            movies: [],
           ),
         ) {
+    on<MovieLoadEvent>(_onLoad);
     on<MovieChangeEvent>(_onChange);
+  }
+
+  FutureOr<void> _onLoad(
+    MovieLoadEvent event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(
+      step: MovieStateStep.loading,
+    ));
+
+    final movies = await _repository.getMovies();
+
+    emit(state.copyWith(
+      step: MovieStateStep.loaded,
+      movies: movies,
+    ));
   }
 
   FutureOr<void> _onChange(
@@ -20,40 +41,13 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     Emitter<MovieState> emit,
   ) {
     final newMovies = state.movies.toList();
-    newMovies[event.index] = _getMovieChanged(index: event.index);
+    final movie = state.movies[event.index];
+    newMovies[event.index] = _repository.getMovieChanged(movie);
 
     emit(
-      MovieState(
+      state.copyWith(
         movies: newMovies,
       ),
     );
-  }
-
-  static List<Movie> _getMovies({
-    required bool changed,
-  }) {
-    return List.generate(15, (index) {
-      final prefix = changed ? "Creed" : "Rocky Balboa";
-      return Movie(title: "$prefix $index");
-    });
-  }
-
-  Movie _getMovieChanged({
-    required int index,
-  }) {
-    final movie = state.movies[index];
-
-    final newTitlePrefix = _getTitleChanged(movie.title);
-
-    return movie.copyWith(
-      title: "$newTitlePrefix $index",
-    );
-  }
-
-  String _getTitleChanged(String title) {
-    if (title.contains("Creed")) {
-      return "Rocky Balboa";
-    }
-    return "Creed";
   }
 }
