@@ -12,7 +12,6 @@ import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   late MovieBloc movieBloc;

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_introduction/dependency_injector.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_widget.dart';
+import 'package:flutter_introduction/app_module.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    const DependencyInjector(
-      child: MyApp(),
+    ModularApp(
+      module: AppModule(),
+      child: const MyApp(),
     ),
   );
 }
@@ -23,18 +22,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BlocProvider<MovieBloc>(
-        create: (context) => MovieBloc(
-          context.read(),
-          context.read(),
-        ),
-        child: const MoviePage(),
-      ),
+      routeInformationParser: Modular.routeInformationParser,
+      routerDelegate: Modular.routerDelegate,
     );
   }
 }
