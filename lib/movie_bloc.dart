@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/change_movie.dart';
+import 'package:flutter_introduction/load_movies.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
-import 'package:flutter_introduction/repository.dart';
+import 'package:flutter_introduction/result.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
-  final Repository _repository;
+  final LoadMovies _loadMovies;
+  final ChangeMovie _changeMovie;
 
   MovieBloc(
-    this._repository,
+    this._loadMovies,
+    this._changeMovie,
   ) : super(
           const MovieState(
             step: MovieStateStep.loading,
@@ -28,11 +32,12 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       step: MovieStateStep.loading,
     ));
 
-    final movies = await _repository.getMovies();
+    final loadMoviesResult = await _loadMovies();
+    if (_emitFailedIfFailure(emit: emit, result: loadMoviesResult)) return null;
 
     emit(state.copyWith(
       step: MovieStateStep.loaded,
-      movies: movies,
+      movies: loadMoviesResult.data!,
     ));
   }
 
@@ -42,12 +47,32 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   ) {
     final newMovies = state.movies.toList();
     final movie = state.movies[event.index];
-    newMovies[event.index] = _repository.getMovieChanged(movie);
 
+    final changeMovieResult = _changeMovie(movie);
+    if (_emitFailedIfFailure(emit: emit, result: changeMovieResult)) {
+      return null;
+    }
+
+    newMovies[event.index] = changeMovieResult.data!;
     emit(
       state.copyWith(
         movies: newMovies,
       ),
     );
+  }
+
+  bool _emitFailedIfFailure({
+    required Result result,
+    required Emitter<MovieState> emit,
+  }) {
+    if (!result.isSuccess()) {
+      emit(
+        state.copyWith(
+          step: MovieStateStep.failed,
+          failure: result.failure,
+        ),
+      );
+    }
+    return !result.isSuccess();
   }
 }
