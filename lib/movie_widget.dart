@@ -17,7 +17,7 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  MovieBloc get bloc => BlocProvider.of<MovieBloc>(context);
+  MovieBloc get bloc => context.read<MovieBloc>();
 
   @override
   void initState() {
