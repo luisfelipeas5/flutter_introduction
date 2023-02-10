@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' hide ReadContext;
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({
@@ -17,7 +18,7 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  MovieBloc get bloc => context.read<MovieBloc>();
+  MovieBloc get bloc => BlocProvider.of<MovieBloc>(context);
 
   @override
   void initState() {

@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/app_module.dart';
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/failure.dart';
@@ -10,8 +11,10 @@ import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_widget.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_test/modular_test.dart';
 
 void main() {
   late MovieBloc movieBloc;
@@ -20,11 +23,8 @@ void main() {
 
   Future<void> pumpMoviePage(WidgetTester tester) {
     return tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          BlocProvider.value(value: movieBloc),
-          Provider.value(value: appToaster),
-        ],
+      BlocProvider(
+        create: (context) => movieBloc,
         child: const MaterialApp(
           home: MoviePage(),
         ),
@@ -47,6 +47,13 @@ void main() {
         movieBloc,
         const Stream<MovieState>.empty(),
         initialState: initialState,
+      );
+
+      initModule(
+        AppModule(),
+        replaceBinds: [
+          Bind.instance<AppToaster>(appToaster),
+        ],
       );
     });
 

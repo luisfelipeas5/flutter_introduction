@@ -1,9 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart' hide ReadContext;
-import 'package:flutter_introduction/context_extensions.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_widget.dart';
-import 'package:flutter_modular/flutter_modular.dart'
-    hide ModularWatchExtension;
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_movie.dart';
 import 'package:flutter_introduction/load_movies.dart';
@@ -23,7 +21,9 @@ class AppModule extends Module {
             i(),
           ),
         ),
-        Bind((i) => const AppToaster()),
+        Bind<AppToaster>(
+          (i) => const AppToaster(),
+        ),
       ];
 
   @override
