@@ -8,9 +8,12 @@ import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_title.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
+  Get.testMode = true;
+
   late MovieBloc movieBloc;
 
   late MovieState initialState;

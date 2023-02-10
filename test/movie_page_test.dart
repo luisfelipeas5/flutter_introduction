@@ -1,7 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_introduction/app_module.dart';
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/failure.dart';
@@ -11,10 +10,9 @@ import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_widget.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
 
 void main() {
   late MovieBloc movieBloc;
@@ -33,10 +31,19 @@ void main() {
   }
 
   group("MoviePage", () {
+    setUpAll(() {
+      appToaster = _MockAppToaster();
+
+      Get.put<AppToaster>(
+        appToaster,
+        permanent: true,
+      );
+    });
+
     setUp(() {
       movieBloc = _MockMovieBloc();
 
-      appToaster = _MockAppToaster();
+      clearInteractions(appToaster);
 
       initialState = _MockMovieState();
       final movie = _MockMovie();
@@ -47,13 +54,6 @@ void main() {
         movieBloc,
         const Stream<MovieState>.empty(),
         initialState: initialState,
-      );
-
-      initModule(
-        AppModule(),
-        replaceBinds: [
-          Bind.instance<AppToaster>(appToaster),
-        ],
       );
     });
 

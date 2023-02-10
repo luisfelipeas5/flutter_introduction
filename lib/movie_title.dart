@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:get/get.dart';
 
 class MovieTitle extends StatelessWidget {
   final Movie movie;
@@ -22,5 +22,5 @@ class MovieTitle extends StatelessWidget {
     );
   }
 
-  void _onTap() => Modular.to.pushNamed('/movie-detail');
+  void _onTap() => Get.toNamed('/movie-detail');
 }
