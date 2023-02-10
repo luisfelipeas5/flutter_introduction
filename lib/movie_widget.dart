@@ -6,7 +6,7 @@ import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:get/get.dart';
 
 class MoviePage extends StatefulWidget {
   const MoviePage({
@@ -48,7 +48,7 @@ class _MoviePageState extends State<MoviePage> {
 
   void _listener(BuildContext context, MovieState state) {
     if (state.step == MovieStateStep.failed) {
-      final appToaster = context.read<AppToaster>();
+      final appToaster = Get.find<AppToaster>();
       appToaster.showFailureToast(state.failure!);
     }
   }

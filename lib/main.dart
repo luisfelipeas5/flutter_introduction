@@ -1,34 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/app_module.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_introduction/app_toaster.dart';
+import 'package:flutter_introduction/change_movie.dart';
+import 'package:flutter_introduction/load_movies.dart';
+import 'package:flutter_introduction/movie_bloc.dart';
+import 'package:flutter_introduction/movie_detail_page.dart';
+import 'package:flutter_introduction/movie_widget.dart';
+import 'package:flutter_introduction/repository.dart';
+import 'package:get/get.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    ModularApp(
-      module: AppModule(),
-      child: const MyApp(),
+
+  Get.put(const Repository());
+  Get.lazyPut(
+    () => ChangeMovie(
+      Get.find(),
     ),
   );
-}
+  Get.lazyPut(
+    () => LoadMovies(
+      Get.find(),
+    ),
+  );
+  Get.lazyPut<AppToaster>(
+    () => const AppToaster(),
+  );
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      routeInformationParser: Modular.routeInformationParser,
-      routerDelegate: Modular.routerDelegate,
-    );
-  }
+  runApp(
+    GetMaterialApp(
+      initialRoute: "/",
+      getPages: [
+        GetPage(
+          name: '/',
+          page: () => BlocProvider<MovieBloc>(
+            create: (context) => MovieBloc(
+              Get.find(),
+              Get.find(),
+            ),
+            child: const MoviePage(),
+          ),
+        ),
+        GetPage(
+          name: '/movie-detail',
+          page: () => const MovieDetailPage(),
+        ),
+      ],
+    ),
+  );
 }

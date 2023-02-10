@@ -1,19 +1,29 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_title.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
   late Movie movie;
 
-  late IModularNavigator navigatorDelegate;
+  late NavigatorObserver navigatorObserver;
+  late Route<dynamic> movieDetailRoute;
 
   Future<void> pumpMovieTitle(WidgetTester tester) {
     return tester.pumpWidget(
-      MaterialApp(
+      GetMaterialApp(
+        navigatorObservers: [
+          navigatorObserver,
+        ],
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case "/movie-detail":
+              return movieDetailRoute;
+          }
+          return MaterialPageRoute(builder: (_) => Container());
+        },
         home: MovieTitle(
           movie: movie,
         ),
@@ -26,11 +36,10 @@ void main() {
       movie = _MockMovie();
       when(() => movie.title).thenReturn("mock title");
 
-      navigatorDelegate = _MockModularNavigate();
-      when(
-        () => navigatorDelegate.pushNamed(captureAny()),
-      ).thenAnswer((invocation) => SynchronousFuture(null));
-      Modular.navigatorDelegate = navigatorDelegate;
+      navigatorObserver = _MockNavigatorObserver();
+      movieDetailRoute = MaterialPageRoute(
+        builder: (_) => const Text("my-account page"),
+      );
     });
 
     testWidgets(
@@ -56,7 +65,10 @@ void main() {
         await widgetTester.tap(find.byType(MovieTitle));
 
         verify(
-          () => navigatorDelegate.pushNamed("/movie-detail"),
+          () => navigatorObserver.didPush(
+            movieDetailRoute,
+            captureAny(),
+          ),
         ).called(1);
       },
     );
@@ -65,4 +77,4 @@ void main() {
 
 class _MockMovie extends Mock implements Movie {}
 
-class _MockModularNavigate extends Mock implements IModularNavigator {}
+class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
