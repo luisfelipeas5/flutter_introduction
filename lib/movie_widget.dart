@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' hide ReadContext;
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_button_list.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:flutter_introduction/movie_list.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie_controller_step.dart';
 import 'package:get/get.dart';
 
 class MoviePage extends StatefulWidget {
@@ -18,27 +16,38 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  MovieBloc get bloc => BlocProvider.of<MovieBloc>(context);
+  MovieController get controller => Get.find<MovieController>();
 
   @override
   void initState() {
     super.initState();
-    bloc.add(MovieLoadEvent());
+
+    ever(
+      controller.step,
+      condition: () {
+        return controller.step.value == MovieControllerStep.failed;
+      },
+      _showToasterCallback,
+    );
+    controller.load();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MovieBloc, MovieState>(
-      listener: _listener,
-      child: const Scaffold(
+    return Container(
+      color: Colors.transparent,
+      child: Scaffold(
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
-              MovieList(),
               SliverToBoxAdapter(
+                child: _buildIndicator(),
+              ),
+              const MovieList(),
+              const SliverToBoxAdapter(
                 child: SizedBox(height: 8),
               ),
-              ChangeButtonList(),
+              const ChangeButtonList(),
             ],
           ),
         ),
@@ -46,10 +55,27 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  void _listener(BuildContext context, MovieState state) {
-    if (state.step == MovieStateStep.failed) {
-      final appToaster = Get.find<AppToaster>();
-      appToaster.showFailureToast(state.failure!);
-    }
+  Widget _buildIndicator() {
+    return GetX<MovieController>(
+      builder: (controller) {
+        if (controller.step.value == MovieControllerStep.loading) {
+          return Column(
+            children: const [
+              SizedBox(
+                height: 16,
+                width: 16,
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  void _showToasterCallback(MovieControllerStep step) {
+    final appToaster = Get.find<AppToaster>();
+    appToaster.showFailureToast(controller.failure.value!);
   }
 }

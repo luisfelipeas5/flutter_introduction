@@ -1,36 +1,35 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc movieBloc;
+  late MovieController movieController;
   late Movie movie;
   const index = 981;
 
   Future<void> pumpChangeButton(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
-        create: (context) => movieBloc,
-        child: MaterialApp(
-          home: ChangeButton(
-            movie: movie,
-            index: index,
-          ),
+      MaterialApp(
+        home: ChangeButton(
+          movie: movie,
+          index: index,
         ),
       ),
     );
   }
 
   group("MovieTitle", () {
+    setUpAll(() {
+      movieController = _MockMovieController();
+      Get.put<MovieController>(movieController);
+    });
+
     setUp(() {
-      movieBloc = _MockMovieBloc();
+      clearInteractions(movieController);
 
       movie = _MockMovie();
     });
@@ -46,16 +45,15 @@ void main() {
         await widgetTester.tap(find.text('Trocar mock title!'));
 
         verify(
-          () => movieBloc.add(MovieChangeEvent(
-            index: index,
-          )),
+          () => movieController.change(index),
         ).called(1);
       },
     );
   });
 }
 
-class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
+class _MockMovieController extends GetxService
+    with Mock
+    implements MovieController {}
 
 class _MockMovie extends Mock implements Movie {}

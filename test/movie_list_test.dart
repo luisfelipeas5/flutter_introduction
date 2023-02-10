@@ -1,11 +1,7 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:flutter_introduction/movie_list.dart';
-import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/movie_title.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -14,36 +10,29 @@ import 'package:mocktail/mocktail.dart';
 void main() {
   Get.testMode = true;
 
-  late MovieBloc movieBloc;
-
-  late MovieState initialState;
+  late MovieController movieController;
 
   Future<void> pumpMovieList(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
-        create: (context) => movieBloc,
-        child: const MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              MovieList(),
-            ],
-          ),
+      const MaterialApp(
+        home: CustomScrollView(
+          slivers: [
+            MovieList(),
+          ],
         ),
       ),
     );
   }
 
   group("MovieList", () {
+    setUpAll(() {
+      movieController = _MockMovieController();
+      Get.put<MovieController>(movieController);
+    });
+
     setUp(() {
-      initialState = _MockMovieState();
-
-      movieBloc = _MockMovieBloc();
-
-      whenListen(
-        movieBloc,
-        const Stream<MovieState>.empty(),
-        initialState: initialState,
-      );
+      clearInteractions(movieController);
+      when(() => movieController.movies).thenReturn(<Movie>[].obs);
     });
 
     testWidgets(
@@ -56,7 +45,7 @@ void main() {
           _MockMovie(),
           _MockMovie(),
         ];
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpMovieList(widgetTester);
 
@@ -75,7 +64,7 @@ void main() {
       (widgetTester) async {
         final movies = List.generate(2, (index) => _MockMovie());
 
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpMovieList(widgetTester);
 
@@ -95,7 +84,7 @@ void main() {
       (widgetTester) async {
         final movies = List.generate(100, (index) => _MockMovie());
 
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpMovieList(widgetTester);
 
@@ -115,10 +104,9 @@ void main() {
   });
 }
 
-class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
-
-class _MockMovieState extends Mock implements MovieState {}
+class _MockMovieController extends GetxService
+    with Mock
+    implements MovieController {}
 
 class _MockMovie extends Mock implements Movie {
   _MockMovie() {
