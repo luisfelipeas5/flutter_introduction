@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_introduction/movie.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class MovieTitle extends StatelessWidget {
   final Movie movie;
@@ -11,10 +12,15 @@ class MovieTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        movie.title,
+    return GestureDetector(
+      onTap: _onTap,
+      child: Center(
+        child: Text(
+          movie.title,
+        ),
       ),
     );
   }
+
+  void _onTap() => Modular.to.pushNamed('/movie-detail');
 }
