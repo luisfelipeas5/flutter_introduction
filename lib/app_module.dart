@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart' hide ReadContext;
 import 'package:flutter_introduction/movie_bloc.dart';
+import 'package:flutter_introduction/movie_detail_page.dart';
 import 'package:flutter_introduction/movie_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_introduction/app_toaster.dart';
@@ -37,6 +38,10 @@ class AppModule extends Module {
             ),
             child: const MoviePage(),
           ),
+        ),
+        ChildRoute(
+          '/movie-detail',
+          child: (context, args) => const MovieDetailPage(),
         ),
       ];
 }
