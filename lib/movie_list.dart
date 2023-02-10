@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:flutter_introduction/movie_title.dart';
 import 'package:get/get.dart';
 
@@ -11,10 +11,9 @@ class MovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        final state = Get.find<MovieController>().state;
-        return _buildList(state.movies);
+    return GetX<MovieController>(
+      builder: (controller) {
+        return _buildList(controller.movies);
       },
     );
   }

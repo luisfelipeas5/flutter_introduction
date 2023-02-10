@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_introduction/change_movie.dart';
+import 'package:flutter_introduction/failure.dart';
 import 'package:flutter_introduction/load_movies.dart';
-import 'package:flutter_introduction/movie_event.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie.dart';
+import 'package:flutter_introduction/movie_controller_step.dart';
 import 'package:flutter_introduction/result.dart';
 import 'package:get/get.dart';
 
@@ -11,11 +12,9 @@ class MovieController extends GetxController {
   final LoadMovies _loadMovies;
   final ChangeMovie _changeMovie;
 
-  MovieState get state => stateObs.value;
-  var stateObs = const MovieState(
-    step: MovieStateStep.loading,
-    movies: [],
-  ).obs;
+  RxList<Movie> movies = <Movie>[].obs;
+  Rx<MovieControllerStep> step = MovieControllerStep.loading.obs;
+  Rx<Failure?> failure = Rx(null);
 
   MovieController(
     this._loadMovies,
@@ -23,55 +22,36 @@ class MovieController extends GetxController {
   );
 
   FutureOr<void> load() async {
-    _update(state.copyWith(
-      step: MovieStateStep.loading,
-    ));
+    step.value = MovieControllerStep.loading;
 
     final loadMoviesResult = await _loadMovies();
     if (_emitFailedIfFailure(result: loadMoviesResult)) return null;
 
-    _update(state.copyWith(
-      step: MovieStateStep.loaded,
-      movies: loadMoviesResult.data!,
-    ));
+    step.value = MovieControllerStep.loaded;
+    movies.assignAll(loadMoviesResult.data!);
   }
 
   FutureOr<void> change(
     int index,
   ) {
-    final newMovies = state.movies.toList();
-    final movie = state.movies[index];
+    final movie = movies[index];
 
     final changeMovieResult = _changeMovie(movie);
     if (_emitFailedIfFailure(result: changeMovieResult)) {
       return null;
     }
 
-    newMovies[index] = changeMovieResult.data!;
-    _update(state.copyWith(
-      movies: newMovies,
-    ));
+    movies[index] = changeMovieResult.data!;
+    step.value = MovieControllerStep.loaded;
   }
 
   bool _emitFailedIfFailure({
     required Result result,
   }) {
     if (!result.isSuccess()) {
-      _update(
-        state.copyWith(
-          step: MovieStateStep.failed,
-          failure: result.failure,
-        ),
-      );
+      step.value = MovieControllerStep.failed;
+      failure.value = result.failure;
     }
     return !result.isSuccess();
-  }
-
-  void _update(MovieState newState) {
-    stateObs.update(
-      (val) {
-        stateObs = newState.obs;
-      },
-    );
   }
 }

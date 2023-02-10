@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
   late MovieController movieController;
-
-  late MovieState initialState;
 
   Future<void> pumpChangeButtonList(WidgetTester tester) {
     return tester.pumpWidget(
@@ -27,17 +23,14 @@ void main() {
   }
 
   group("ChangeButtonList", () {
-    setUp(() {
-      initialState = _MockMovieState();
-
+    setUpAll(() {
       movieController = _MockMovieController();
       Get.put<MovieController>(movieController);
-      when(
-        () => movieController.state,
-      ).thenReturn(initialState);
-      when(
-        () => movieController.stateObs,
-      ).thenReturn(initialState.obs);
+    });
+
+    setUp(() {
+      clearInteractions(movieController);
+      when(() => movieController.movies).thenReturn(<Movie>[].obs);
     });
 
     testWidgets(
@@ -50,7 +43,7 @@ void main() {
           _MockMovie(),
           _MockMovie(),
         ];
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpChangeButtonList(widgetTester);
 
@@ -69,7 +62,7 @@ void main() {
       (widgetTester) async {
         final movies = List.generate(2, (index) => _MockMovie());
 
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpChangeButtonList(widgetTester);
 
@@ -89,7 +82,7 @@ void main() {
       (widgetTester) async {
         final movies = List.generate(100, (index) => _MockMovie());
 
-        when(() => initialState.movies).thenReturn(movies);
+        when(() => movieController.movies).thenReturn(movies.obs);
 
         await pumpChangeButtonList(widgetTester);
 
@@ -112,8 +105,6 @@ void main() {
 class _MockMovieController extends GetxService
     with Mock
     implements MovieController {}
-
-class _MockMovieState extends Mock implements MovieState {}
 
 class _MockMovie extends Mock implements Movie {
   _MockMovie() {

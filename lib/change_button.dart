@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_bloc.dart';
+import 'package:flutter_introduction/movie_controller.dart';
 import 'package:get/get.dart';
 
 class ChangeButton extends StatefulWidget {
