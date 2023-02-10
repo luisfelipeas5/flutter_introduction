@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' hide ReadContext;
 import 'package:flutter_introduction/app_toaster.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_list.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:get/get.dart';
@@ -18,18 +16,22 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  MovieBloc get bloc => BlocProvider.of<MovieBloc>(context);
+  MovieController get controller => Get.find<MovieController>();
 
   @override
   void initState() {
     super.initState();
-    bloc.add(MovieLoadEvent());
+    controller.load();
+    ever(
+      controller.stateObs,
+      _listener,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MovieBloc, MovieState>(
-      listener: _listener,
+    return Container(
+      color: Colors.transparent,
       child: const Scaffold(
         body: SafeArea(
           child: CustomScrollView(
@@ -46,7 +48,7 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  void _listener(BuildContext context, MovieState state) {
+  void _listener(MovieState state) {
     if (state.step == MovieStateStep.failed) {
       final appToaster = Get.find<AppToaster>();
       appToaster.showFailureToast(state.failure!);

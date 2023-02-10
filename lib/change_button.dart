@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/movie.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_event.dart';
+import 'package:get/get.dart';
 
 class ChangeButton extends StatefulWidget {
   final Movie movie;
@@ -31,10 +30,8 @@ class _ChangeButtonState extends State<ChangeButton> {
           _buttonColor = _genrateRandomColor();
         });
 
-        final bloc = BlocProvider.of<MovieBloc>(context);
-        bloc.add(MovieChangeEvent(
-          index: widget.index,
-        ));
+        final movieController = Get.find<MovieController>();
+        movieController.change(widget.index);
       },
       color: _buttonColor,
       child: Text(

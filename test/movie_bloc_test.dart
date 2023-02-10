@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc bloc;
+  late MovieController bloc;
 
   late LoadMovies loadMovies;
   late ChangeMovie changeMovie;
@@ -27,13 +27,13 @@ void main() {
 
       failure = _MockFailure();
 
-      bloc = MovieBloc(
+      bloc = MovieController(
         loadMovies,
         changeMovie,
       );
     });
 
-    MovieBloc build() => bloc;
+    MovieController build() => bloc;
 
     group("MovieLoadEvent", () {
       setUp(() {
@@ -46,7 +46,7 @@ void main() {
         );
       });
 
-      void act(MovieBloc bloc) => bloc.add(MovieLoadEvent());
+      void act(MovieController bloc) => bloc.add(MovieLoadEvent());
 
       blocTest(
         "when MovieLoadEvent is added, "
@@ -127,7 +127,7 @@ void main() {
             step: MovieStateStep.loaded,
           );
 
-      void act(MovieBloc bloc) => bloc.add(
+      void act(MovieController bloc) => bloc.add(
             MovieChangeEvent(
               index: index,
             ),

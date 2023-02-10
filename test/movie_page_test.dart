@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc movieBloc;
+  late MovieController movieBloc;
   late MovieState initialState;
   late AppToaster appToaster;
 
@@ -119,7 +119,7 @@ void main() {
 }
 
 class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
+    implements MovieController {}
 
 class _MockMovieState extends Mock implements MovieState {}
 

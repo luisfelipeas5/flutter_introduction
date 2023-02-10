@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/movie_bloc.dart';
-import 'package:flutter_introduction/movie_state.dart';
+import 'package:get/get.dart';
 
 class ChangeButtonList extends StatelessWidget {
   const ChangeButtonList({
@@ -11,8 +10,9 @@ class ChangeButtonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieBloc, MovieState>(
-      builder: (context, state) {
+    return Obx(
+      () {
+        final state = Get.find<MovieController>().state;
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {

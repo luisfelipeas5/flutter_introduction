@@ -10,13 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc movieBloc;
+  late MovieController movieBloc;
   late Movie movie;
   const index = 981;
 
   Future<void> pumpChangeButton(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
+      BlocProvider<MovieController>(
         create: (context) => movieBloc,
         child: MaterialApp(
           home: ChangeButton(
@@ -56,6 +56,6 @@ void main() {
 }
 
 class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
+    implements MovieController {}
 
 class _MockMovie extends Mock implements Movie {}

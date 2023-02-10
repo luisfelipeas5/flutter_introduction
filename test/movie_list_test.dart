@@ -14,13 +14,13 @@ import 'package:mocktail/mocktail.dart';
 void main() {
   Get.testMode = true;
 
-  late MovieBloc movieBloc;
+  late MovieController movieBloc;
 
   late MovieState initialState;
 
   Future<void> pumpMovieList(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
+      BlocProvider<MovieController>(
         create: (context) => movieBloc,
         child: const MaterialApp(
           home: CustomScrollView(
@@ -116,7 +116,7 @@ void main() {
 }
 
 class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
+    implements MovieController {}
 
 class _MockMovieState extends Mock implements MovieState {}
 

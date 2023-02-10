@@ -1,72 +1,63 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/change_movie.dart';
 import 'package:flutter_introduction/load_movies.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_introduction/result.dart';
+import 'package:get/get.dart';
 
-class MovieBloc extends Bloc<MovieEvent, MovieState> {
+class MovieController extends GetxController {
   final LoadMovies _loadMovies;
   final ChangeMovie _changeMovie;
 
-  MovieBloc(
+  MovieState get state => stateObs.value;
+  var stateObs = const MovieState(
+    step: MovieStateStep.loading,
+    movies: [],
+  ).obs;
+
+  MovieController(
     this._loadMovies,
     this._changeMovie,
-  ) : super(
-          const MovieState(
-            step: MovieStateStep.loading,
-            movies: [],
-          ),
-        ) {
-    on<MovieLoadEvent>(_onLoad);
-    on<MovieChangeEvent>(_onChange);
-  }
+  );
 
-  FutureOr<void> _onLoad(
-    MovieLoadEvent event,
-    Emitter<MovieState> emit,
-  ) async {
-    emit(state.copyWith(
+  FutureOr<void> load() async {
+    _update(state.copyWith(
       step: MovieStateStep.loading,
     ));
 
     final loadMoviesResult = await _loadMovies();
-    if (_emitFailedIfFailure(emit: emit, result: loadMoviesResult)) return null;
+    if (_emitFailedIfFailure(result: loadMoviesResult)) return null;
 
-    emit(state.copyWith(
+    _update(state.copyWith(
       step: MovieStateStep.loaded,
       movies: loadMoviesResult.data!,
     ));
   }
 
-  FutureOr<void> _onChange(
-    MovieChangeEvent event,
-    Emitter<MovieState> emit,
+  FutureOr<void> change(
+    int index,
   ) {
     final newMovies = state.movies.toList();
-    final movie = state.movies[event.index];
+    final movie = state.movies[index];
 
     final changeMovieResult = _changeMovie(movie);
-    if (_emitFailedIfFailure(emit: emit, result: changeMovieResult)) {
+    if (_emitFailedIfFailure(result: changeMovieResult)) {
       return null;
     }
 
-    newMovies[event.index] = changeMovieResult.data!;
-    emit(
-      state.copyWith(
-        movies: newMovies,
-      ),
-    );
+    newMovies[index] = changeMovieResult.data!;
+    _update(state.copyWith(
+      movies: newMovies,
+    ));
   }
 
   bool _emitFailedIfFailure({
     required Result result,
-    required Emitter<MovieState> emit,
   }) {
     if (!result.isSuccess()) {
-      emit(
+      _update(
         state.copyWith(
           step: MovieStateStep.failed,
           failure: result.failure,
@@ -74,5 +65,13 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       );
     }
     return !result.isSuccess();
+  }
+
+  void _update(MovieState newState) {
+    stateObs.update(
+      (val) {
+        stateObs = newState.obs;
+      },
+    );
   }
 }

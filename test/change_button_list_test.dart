@@ -1,6 +1,4 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_introduction/change_button.dart';
 import 'package:flutter_introduction/change_button_list.dart';
 import 'package:flutter_introduction/movie.dart';
@@ -8,23 +6,21 @@ import 'package:flutter_introduction/movie_bloc.dart';
 import 'package:flutter_introduction/movie_event.dart';
 import 'package:flutter_introduction/movie_state.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  late MovieBloc movieBloc;
+  late MovieController movieController;
 
   late MovieState initialState;
 
   Future<void> pumpChangeButtonList(WidgetTester tester) {
     return tester.pumpWidget(
-      BlocProvider<MovieBloc>(
-        create: (context) => movieBloc,
-        child: const MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              ChangeButtonList(),
-            ],
-          ),
+      const MaterialApp(
+        home: CustomScrollView(
+          slivers: [
+            ChangeButtonList(),
+          ],
         ),
       ),
     );
@@ -34,13 +30,14 @@ void main() {
     setUp(() {
       initialState = _MockMovieState();
 
-      movieBloc = _MockMovieBloc();
-
-      whenListen(
-        movieBloc,
-        const Stream<MovieState>.empty(),
-        initialState: initialState,
-      );
+      movieController = _MockMovieController();
+      Get.put<MovieController>(movieController);
+      when(
+        () => movieController.state,
+      ).thenReturn(initialState);
+      when(
+        () => movieController.stateObs,
+      ).thenReturn(initialState.obs);
     });
 
     testWidgets(
@@ -112,8 +109,9 @@ void main() {
   });
 }
 
-class _MockMovieBloc extends MockBloc<MovieEvent, MovieState>
-    implements MovieBloc {}
+class _MockMovieController extends GetxService
+    with Mock
+    implements MovieController {}
 
 class _MockMovieState extends Mock implements MovieState {}
 
