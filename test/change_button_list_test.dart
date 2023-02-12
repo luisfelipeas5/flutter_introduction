@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/change_button.dart';
-import 'package:flutter_introduction/change_button_list.dart';
-import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_controller.dart';
+import 'package:flutter_introduction/modules/movies/domain/entity/movie.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller.dart';
+import 'package:flutter_introduction/modules/movies/presentation/widgets/change_button/change_button.dart';
+import 'package:flutter_introduction/modules/movies/presentation/widgets/change_button/change_button_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';

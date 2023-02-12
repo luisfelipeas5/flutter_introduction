@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/app_toaster.dart';
-import 'package:flutter_introduction/change_button_list.dart';
-import 'package:flutter_introduction/movie_controller.dart';
-import 'package:flutter_introduction/movie_list.dart';
-import 'package:flutter_introduction/movie_controller_step.dart';
+import 'package:flutter_introduction/feature_core/app_toaster.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller_step.dart';
+import 'package:flutter_introduction/modules/movies/presentation/widgets/change_button/change_button_list.dart';
+import 'package:flutter_introduction/modules/movies/presentation/widgets/movie_title/movie_list.dart';
 import 'package:get/get.dart';
 
 class MoviePage extends StatefulWidget {

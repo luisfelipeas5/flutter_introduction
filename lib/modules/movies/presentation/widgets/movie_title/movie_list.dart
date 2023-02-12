@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_controller.dart';
-import 'package:flutter_introduction/movie_title.dart';
+import 'package:flutter_introduction/modules/movies/domain/entity/movie.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller.dart';
+import 'package:flutter_introduction/modules/movies/presentation/widgets/movie_title/movie_title.dart';
 import 'package:get/get.dart';
 
 class MovieList extends StatelessWidget {

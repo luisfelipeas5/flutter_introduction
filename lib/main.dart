@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_introduction/app_toaster.dart';
-import 'package:flutter_introduction/change_movie.dart';
-import 'package:flutter_introduction/load_movies.dart';
-import 'package:flutter_introduction/movie_detail_page.dart';
-import 'package:flutter_introduction/movie_page_bindings.dart';
-import 'package:flutter_introduction/movie_widget.dart';
-import 'package:flutter_introduction/repository.dart';
+import 'package:flutter_introduction/feature_core/app_toaster.dart';
+import 'package:flutter_introduction/modules/movies/domain/use_cases/load_movies.dart';
+import 'package:flutter_introduction/modules/movies/domain/use_cases/change_movie.dart';
+import 'package:flutter_introduction/modules/movies/presentation/pages/movie_detail_page.dart';
+import 'package:flutter_introduction/modules/movies/presentation/pages/movie_widget.dart';
+import 'package:flutter_introduction/modules/movies/data/repositories/repository.dart';
+import 'package:flutter_introduction/modules/movies/dependency_injection/movie_page_bindings.dart';
 import 'package:get/get.dart';
 
 void main() {
