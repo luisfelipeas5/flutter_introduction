@@ -1,5 +1,5 @@
-import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/result.dart';
+import 'package:flutter_introduction/modules/movies/domain/entity/movie.dart';
+import 'package:flutter_introduction/modules/shared/core/result.dart';
 
 class Repository {
   const Repository();

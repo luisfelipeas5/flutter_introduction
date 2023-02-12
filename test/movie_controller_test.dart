@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_introduction/change_movie.dart';
-import 'package:flutter_introduction/failure.dart';
-import 'package:flutter_introduction/load_movies.dart';
-import 'package:flutter_introduction/movie.dart';
-import 'package:flutter_introduction/movie_controller.dart';
-import 'package:flutter_introduction/movie_controller_step.dart';
-import 'package:flutter_introduction/result.dart';
+import 'package:flutter_introduction/modules/movies/domain/use_cases/change_movie.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller.dart';
+import 'package:flutter_introduction/modules/movies/presentation/controllers/movies/movie_controller_step.dart';
+import 'package:flutter_introduction/modules/shared/core/failure.dart';
+import 'package:flutter_introduction/modules/movies/domain/use_cases/load_movies.dart';
+import 'package:flutter_introduction/modules/movies/domain/entity/movie.dart';
+import 'package:flutter_introduction/modules/shared/core/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mocktail/mocktail.dart';

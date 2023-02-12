@@ -1,4 +1,4 @@
-import 'package:flutter_introduction/failure.dart';
+import 'package:flutter_introduction/modules/shared/core/failure.dart';
 
 enum ResultStatus {
   success,
